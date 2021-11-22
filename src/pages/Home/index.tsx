@@ -54,7 +54,7 @@ const Home: React.FC = () => {
   const [events, setEvents] = useState<IEvents[]>([]);
 
   const { isLoaded, loadError } = useJsApiLoader({
-    googleMapsApiKey: "AIzaSyBvP9WgzzF2p_HrFflX1iB4adeNmX4Dzjs"
+    googleMapsApiKey: ""
   });
 
   const location = useGeoLocation();
