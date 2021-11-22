@@ -14,33 +14,44 @@ import {
   SidebarBottom,
   MapArea,
   FABButton,
+  InfoArea,
+  TodayArea,
+  Block,
+  ScheduleArea,
 } from './styles';
 
 import logo from '../../assets/logo.svg';
-import mapMarker from '../../assets/mapMarker.svg';
+import mapMarkerToday from '../../assets/mapMarkerToday.svg';
+import mapMarkerNotToday from '../../assets/mapMarkerNotToday.svg';
+import { useNavigate } from 'react-router';
+
+interface IUser {
+  first_name: string;
+  last_name: string;
+  email: string;
+}
+
+interface IEvent {
+  id: number,
+  event_name: string,
+  drescription: string,
+  description_donations: string,
+  latitude: number,
+  longitude: number,
+  date_init_event: string,
+  date_end_event: string,
+  phone: string,
+  pictures: Array<any>;
+}
+interface IEvents {
+  user: IUser;
+  event: IEvent;
+}
 
 const Home: React.FC = () => {
-  const [events, setEvents] = useState([
-    {
-      user: {
-          first_name: "João",
-          last_name: "Lucas",
-          email: "joaolucas@teste.com"
-      },
-      event: {
-          id: 5,
-          event_name: "Novo evento SESC",
-          drescription: "descrição",
-          description_donations: "descrição de doações",
-          latitude: -8.190960160125,
-          longitude: -34.918197089208,
-          date_init_event: "2021-11-22 18:00:00",
-          date_end_event: "2021-11-22 20:00:00",
-          phone: "81999999999",
-          pictures: []
-      }
-    }
-  ]);
+  const navigate = useNavigate();
+
+  const [events, setEvents] = useState<IEvents[]>([]);
 
   const { isLoaded, loadError } = useJsApiLoader({
     googleMapsApiKey: "AIzaSyBvP9WgzzF2p_HrFflX1iB4adeNmX4Dzjs"
@@ -50,9 +61,8 @@ const Home: React.FC = () => {
 
   const getEvents = useCallback(async () => {
     try {
-      const response = await api.get('/');
-      console.log(response);
-      // setEvents(response.data.response);
+      const response = await api.get('');
+      setEvents(response.data.response);
     } catch (err) {
       console.log(err);
     }
@@ -93,12 +103,23 @@ const Home: React.FC = () => {
           zoom={15}
           options={{ zoomControl: false }}
         >
-          {events.map(event => (
-            <Marker 
-              icon={mapMarker} 
-              position={{ lat: event.event.latitude, lng: event.event.longitude }} 
-            />
-          ))}
+          {events.map(event => {
+            const today = new Date();
+            const someDate = new Date(event.event.date_init_event);
+            const isToday = someDate.getDate() === today.getDate() &&
+              someDate.getMonth() === today.getMonth() &&
+              someDate.getFullYear() === today.getFullYear();
+
+            return (
+              <Marker 
+                key={event.event.id}
+                icon={isToday ? mapMarkerToday : mapMarkerNotToday} 
+                position={{ lat: event.event.latitude, lng: event.event.longitude }}
+                onClick={() => navigate('/evento', { state: event.event.id })}
+                opacity={isToday ? 1 : 0.8 }
+              />
+            )
+          })}
         </GoogleMap>
         ) : (
           <h1>Carregando</h1>
@@ -108,6 +129,18 @@ const Home: React.FC = () => {
       <FABButton>
         <FiPlus size={32} color="#fff" />
       </FABButton>
+
+      <InfoArea>
+        <TodayArea>
+          <Block />
+          <span>Evento Hoje</span>
+        </TodayArea>
+
+        <ScheduleArea>
+          <Block isGray={true} />
+          <span>Evento Agendado</span>
+        </ScheduleArea>
+      </InfoArea>
     </Container>
   );
 }

@@ -1,5 +1,9 @@
 import styled from 'styled-components';
 
+interface IBlock {
+  isGray?: boolean;
+}
+
 export const Container = styled.div`
   display: flex;
   width: 100%;
@@ -70,4 +74,35 @@ export const FABButton = styled.button`
   border-radius: 20px;
   border: 0;
 `;
+
+export const InfoArea = styled.div`
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  width: 180px;
+  height: 80px;
+  background: #fff;
+  position: absolute;
+  top: 100px;
+  right: 20px;
+  padding-left: 10px;
+`;
+
+export const TodayArea = styled.div`
+  display: flex;
+  align-items: center;
+`;
+
+export const Block = styled.div<IBlock>`
+  width: 20px;
+  height: 20px;
+  background: ${props => props.isGray ? '#827C7E' : '#FFCA01'};
+  margin-right: 10px;
+`;
+
+export const ScheduleArea = styled.div`
+  display: flex;
+  align-items: center;
+`;
+
 
