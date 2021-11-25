@@ -11,18 +11,20 @@ import { Button } from '../../components/Button';
 
 import { 
   Container,
-  AreaLogin,
-  CardLogin,
+  Area,
+  Card,
 } from './styles';
 import getValidationErrors from '../../utils/getValidationsErros';
 import api from '../../services';
 
 interface IData {
+  firstName: string;
+  lastName: string;
   email: string;
   password: string;
 }
 
-const Login: React.FC = () => {
+const CreateUser: React.FC = () => {
   const [loading, setLoading] = useState(false);
 
   const navigate = useNavigate();
@@ -36,6 +38,8 @@ const Login: React.FC = () => {
       setLoading(true);
 
       const schema = Yup.object().shape({
+        firstName: Yup.string().required('Nome obrigatório'),
+        lastName: Yup.string().required('Sobrenome obrigatório'),
         email: Yup.string().email('E-mail inválido').required('E-mail obrigatório'),
         password: Yup.string().min(4, 'Senha deve conter no mínimo 4 caracteres').required('Senha obrigatória'),
       });
@@ -44,14 +48,16 @@ const Login: React.FC = () => {
         abortEarly: false,
       });
 
-      const { data: dataToken } = await api.get('/auth/login', { auth: {
-        username: data.email,
-        password: data.password
-      }});
+      const { data: dataUser } = await api.post('/users', {
+        first_name: data.firstName,
+        lastName: data.lastName,
+        email: data.email,
+        password: data.password,
+      });
 
       setLoading(false);
 
-      console.log(dataToken.access_token);
+      console.log(dataUser);
     } catch (err) {
       setLoading(false);
 
@@ -60,7 +66,7 @@ const Login: React.FC = () => {
 
         formRef.current?.setErrors(errors);
       } else {
-        toast.error('E-mail ou senha inválidos');
+        toast.error('Erro. Tente novamente mais tarde!');
       }
     }
   }, []);
@@ -69,31 +75,35 @@ const Login: React.FC = () => {
     <Container>
       <SideBar />
 
-      <AreaLogin>
-        <CardLogin>
-          <h1>Login</h1>
+      <Area>
+        <Card>
+          <h1>Cadastrar</h1>
 
           <Form
             ref={formRef}
             onSubmit={handleSubmit}
             initialData={{
-              login: '',
+              firstName: '',
+              lastName: '',
+              email: '',
               password: '',
             }}
             >
+              <Input name="firstName" label="Nome" />
+              <Input name="lastName" label="Sobrenome" />
               <Input name="email" label="E-mail" />
-              <Input name="password" label="Senha" type="password" />
-              <Button loading={loading} type="submit">Entrar</Button>
+              <Input name="password" label="Senha" />
+              <Button loading={loading} type="submit">Cadastrar</Button>
             </Form>
 
-            <span>
-              Não tem conta? Crie uma clicando {' '}
-              <button onClick={() => navigate('/cadastrar')}>aqui!</button>
-            </span>
-        </CardLogin>
-      </AreaLogin>
+            <p>
+              Já tem conta? Entre uma clicando {' '}
+              <button onClick={() => navigate('/login')}>aqui!</button>
+            </p>
+        </Card>
+      </Area>
     </Container>
   );
 }
 
-export { Login };
+export { CreateUser };
