@@ -1,8 +1,9 @@
 import { GoogleMap, Marker, useJsApiLoader } from '@react-google-maps/api';
 import React, { useCallback, useEffect, useState } from 'react';
 import { useLocation } from 'react-router-dom';
-import { FiClock } from 'react-icons/fi'
-import { FaWhatsapp } from 'react-icons/fa'
+import { FiClock } from 'react-icons/fi';
+import { FaWhatsapp } from 'react-icons/fa';
+import { format, isToday, getHours } from 'date-fns';
 
 import { SideBar } from '../../components/SideBar';
 import api from '../../services';
@@ -50,7 +51,7 @@ const Event: React.FC = () => {
   const [event, setEvent] = useState<IEvent>();
 
   const { isLoaded, loadError } = useJsApiLoader({
-    googleMapsApiKey: ""
+    googleMapsApiKey: process.env.REACT_APP_API_KEY || ""
   });
 
   const location = useLocation();
@@ -67,11 +68,7 @@ const Event: React.FC = () => {
   useEffect(() => {
     getEvent();
   }, [getEvent]);
-  
-  if (!event) {
-    return <></>;
-  }
-  
+
   return (
     <Container>
       <SideBar />
@@ -80,18 +77,21 @@ const Event: React.FC = () => {
         <h4>Evento de Doação</h4>
 
         <Card>
-          {event.event.event_name}
-          <img src="https://portalp1.com.br/wp-content/uploads/2021/09/Setembro-Verde-4-750x375-1.jpg" alt="Imagem" />
+          {event?.event?.pictures[0]?.base64 ? (
+            <img src={event?.event.pictures[0].base64} alt={event?.event.pictures[0].title} />
+          ) : (
+            <img src="https://www.madeireiraestrela.com.br/images/joomlart/demo/default.jpg" alt="Sem Imagem" />
+          )}
 
           <ContainerCard>
-            <h1>{event.event.event_name}</h1>
+            <h1>{event?.event.event_name}</h1>
 
-            <p>{event.event.drescription}</p>
+            <p>{event?.event.drescription}</p>
 
             <Maps>
-            {loadError && <h1>Erro ao carregar o mapa</h1>}
+            {loadError && <h4>Erro ao carregar o mapa</h4>}
 
-            {isLoaded ? (
+            {isLoaded && event ? (
               <GoogleMap
                 mapContainerStyle={{
                   width: '100%',
@@ -113,14 +113,14 @@ const Event: React.FC = () => {
                 />
               </GoogleMap>
               ) : (
-                <h1>Carregando</h1>
+                <h3>Carregando</h3>
               )}
             </Maps>
 
             <LinkToGoogleMaps
               target="_blank"
               rel="noopener noreferrer"
-              href={`https://www.google.com/maps/dir/?api=1&destination=${event.event.latitude},${event.event.longitude}`}
+              href={`https://www.google.com/maps/dir/?api=1&destination=${event?.event.latitude},${event?.event.longitude}`}
             >
               Ver rotas no Google Maps
             </LinkToGoogleMaps>
@@ -131,16 +131,20 @@ const Event: React.FC = () => {
 
             <CardHour>
               <FiClock size={32} color="#15B6D6" />
-              <span>Horário</span>
-              <span>Das 19h às 22h</span>
+              {event && isToday(new Date(event.event.date_init_event)) ? (
+                <span>Horário (Hoje)</span>
+              ) : (
+                <span>Horário (Dia {event && format(new Date(event.event.date_init_event), 'dd/MM/yyyy')})</span>
+              )}
+              <span>Das {event && getHours(new Date(event.event.date_init_event))}h às {event && getHours(new Date(event.event.date_end_event))}h</span>
             </CardHour>
 
-            <DescriptionDonations>{event.event.description_donations}</DescriptionDonations>
+            <DescriptionDonations>{event?.event.description_donations}</DescriptionDonations>
 
             <WhatsAppButton 
               target="_blank"
               rel="noopener noreferrer"
-              href={`https://api.whatsapp.com/send?phone=+55${event.event.phone}`}
+              href={`https://api.whatsapp.com/send?phone=+55${event?.event.phone}&text=Olá, gostaria de mais informações sobre o evento ${event?.event.event_name}.`}
             >
                 <FaWhatsapp size={20} color="#FFF"/>
                 Entrar em contato

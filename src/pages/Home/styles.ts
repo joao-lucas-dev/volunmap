@@ -73,6 +73,11 @@ export const FABButton = styled.button`
   background: #ED0059;
   border-radius: 20px;
   border: 0;
+  transition: all 0.2s;
+
+  &:hover {
+    background: #E95C9C;
+  }
 `;
 
 export const InfoArea = styled.div`
