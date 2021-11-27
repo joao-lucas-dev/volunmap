@@ -4,17 +4,17 @@ import { useField } from '@unform/core'
 import {
   Container
 } from './styles';
+import { FiPlus } from 'react-icons/fi';
 
 interface InputProps extends InputHTMLAttributes<HTMLInputElement> {
   name: string;
   label: string;
-  styleOf?: string;
 }
 
-const Input: React.FC<InputProps> = ({ name, label, styleOf = 'input', ...rest }) => {
+const InputFile: React.FC<InputProps> = ({ name, label, ...rest }) => {
   const inputRef = useRef(null)
 
-  const { fieldName, defaultValue, registerField, error } = useField(name)
+  const { fieldName, defaultValue, registerField, error } = useField(name);
 
   useEffect(() => {
     registerField({
@@ -34,30 +34,22 @@ const Input: React.FC<InputProps> = ({ name, label, styleOf = 'input', ...rest }
 
   return (
     <Container>
-      <label htmlFor={fieldName}>{label}</label>
+      <p>{label}</p>
 
-      {styleOf === 'textArea' && (
-        <textarea 
-          id={fieldName}
-          ref={inputRef}
-          defaultValue={defaultValue}
-          cols={30} 
-          rows={5}
-        />
-      )}
+      <label htmlFor={fieldName}>
+        <FiPlus color="#15B6D6" size={16}/>
+      </label>
 
-      {styleOf === 'input' && (
-        <input
-          id={fieldName}
-          ref={inputRef}
-          defaultValue={defaultValue}
-          {...rest}
-        />
-      )}
+      <input
+        id={fieldName}
+        ref={inputRef}
+        defaultValue={defaultValue}
+        {...rest}
+      />
 
       {error && <span className="error">{error}</span>}
     </Container>
   )
 }
 
-export { Input };
+export { InputFile };

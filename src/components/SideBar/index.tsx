@@ -7,7 +7,12 @@ import { FiArrowLeft } from 'react-icons/fi';
 import { Container, AreaTop, AreaBottom } from './styles';
 
 import logo from '../../assets/logo.svg';
-const SideBar: React.FC = () => {
+
+interface IParams {
+  goTo: string;
+}
+
+const SideBar: React.FC<IParams> = ({ goTo }) => {
   const navigate = useNavigate();
 
   return (
@@ -16,7 +21,7 @@ const SideBar: React.FC = () => {
         <img src={logo} alt="VolunMap" />
       </AreaTop>
       <AreaBottom>
-        <button onClick={() => navigate('/')}>
+        <button onClick={() => navigate(goTo)}>
           <FiArrowLeft size={22} color="#FFF" />
         </button>
       </AreaBottom>

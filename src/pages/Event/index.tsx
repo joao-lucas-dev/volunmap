@@ -3,7 +3,8 @@ import React, { useCallback, useEffect, useState } from 'react';
 import { useLocation } from 'react-router-dom';
 import { FiClock } from 'react-icons/fi';
 import { FaWhatsapp } from 'react-icons/fa';
-import { format, isToday, getHours } from 'date-fns';
+import { format, getHours } from 'date-fns';
+import { isToday } from '../../utils/dateFormat';
 
 import { SideBar } from '../../components/SideBar';
 import api from '../../services';
@@ -67,11 +68,12 @@ const Event: React.FC = () => {
 
   useEffect(() => {
     getEvent();
+    window.scrollTo(0, 0);
   }, [getEvent]);
 
   return (
     <Container>
-      <SideBar />
+      <SideBar goTo="/" />
 
       <AreaEvent>
         <h4>Evento de Doação</h4>
@@ -131,7 +133,7 @@ const Event: React.FC = () => {
 
             <CardHour>
               <FiClock size={32} color="#15B6D6" />
-              {event && isToday(new Date(event.event.date_init_event)) ? (
+              {event && isToday(event.event.date_init_event) ? (
                 <span>Horário (Hoje)</span>
               ) : (
                 <span>Horário (Dia {event && format(new Date(event.event.date_init_event), 'dd/MM/yyyy')})</span>

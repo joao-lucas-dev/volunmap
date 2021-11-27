@@ -1,6 +1,8 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import { GoogleMap, useJsApiLoader, Marker } from '@react-google-maps/api';
-import { FiPlus } from 'react-icons/fi'
+import { useNavigate } from 'react-router';
+
+import { isToday, isBefore } from '../../utils/dateFormat';
 
 import { useGeoLocation } from '../../hooks/useGeoLocation';
 
@@ -13,7 +15,6 @@ import {
   SidebarMiddle, 
   SidebarBottom,
   MapArea,
-  FABButton,
   InfoArea,
   TodayArea,
   Block,
@@ -23,8 +24,7 @@ import {
 import logo from '../../assets/logo.svg';
 import mapMarkerToday from '../../assets/mapMarkerToday.svg';
 import mapMarkerNotToday from '../../assets/mapMarkerNotToday.svg';
-import { useNavigate } from 'react-router';
-import isToday from 'date-fns/isToday';
+import { FAB } from '../../components/FAB';
 
 interface IUser {
   first_name: string;
@@ -105,24 +105,19 @@ const Home: React.FC = () => {
           options={{ zoomControl: false }}
         >
           {events.map(event => {
-            const today = new Date();
-            const eventDate = new Date(event.event.date_init_event);
-            const isTodayDate = isToday(new Date(eventDate));
-            const isBeforeDate = eventDate.getDate() < today.getDate() &&
-            eventDate.getMonth() <= today.getMonth() &&
-            eventDate.getFullYear() <= today.getFullYear();
+            const isTodayDate = isToday(event.event.date_init_event);
+            const isBeforeDate = isBefore(event.event.date_init_event);
             return (
-              <>
+              <div key={event.event.id}>
                 {!isBeforeDate && (
                   <Marker 
-                    key={event.event.id}
                     icon={isTodayDate ? mapMarkerToday : mapMarkerNotToday} 
                     position={{ lat: event.event.latitude, lng: event.event.longitude }}
                     onClick={() => navigate('/evento', { state: event.event.id })}
                     opacity={isTodayDate ? 1 : 0.8 }
                   />
                 )}
-              </>
+              </div>
             )
           })}
         </GoogleMap>
@@ -131,9 +126,7 @@ const Home: React.FC = () => {
         )}
       </MapArea>
 
-      <FABButton onClick={() => navigate("/login")}>
-        <FiPlus size={32} color="#fff" />
-      </FABButton>
+      <FAB onClick={() => navigate("/login")}/>
 
       <InfoArea>
         <TodayArea>

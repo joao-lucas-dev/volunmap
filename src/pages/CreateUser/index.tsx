@@ -48,7 +48,7 @@ const CreateUser: React.FC = () => {
         abortEarly: false,
       });
 
-      const { data: dataUser } = await api.post('/users', {
+      await api.post('/users', {
         first_name: data.firstName,
         lastName: data.lastName,
         email: data.email,
@@ -57,7 +57,9 @@ const CreateUser: React.FC = () => {
 
       setLoading(false);
 
-      console.log(dataUser);
+      toast.success('Cadastro realizado com sucesso!');
+
+      navigate('/login')
     } catch (err) {
       setLoading(false);
 
@@ -69,11 +71,11 @@ const CreateUser: React.FC = () => {
         toast.error('Erro. Tente novamente mais tarde!');
       }
     }
-  }, []);
+  }, [navigate]);
 
   return (
     <Container>
-      <SideBar />
+      <SideBar goTo="/"/>
 
       <Area>
         <Card>

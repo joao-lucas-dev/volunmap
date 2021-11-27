@@ -6,15 +6,19 @@ export const Container = styled.div`
   flex-direction: column;
   margin-bottom: 24px;
 
-  label {
+  p {
     margin-bottom: 8px;
     font-size: 16px;
     color: #898C95;
     font-weight: 600;
   }
 
-  textarea {
-    border: 1px solid #D3E2E5;
+  label {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 64px;
+    border: 1px dashed #96D2F0;
     border-radius: 20px;
     background: #F5F8FA;
     padding: 20px;
@@ -22,12 +26,7 @@ export const Container = styled.div`
   }
 
   input {
-    height: 64px;
-    border: 1px solid #D3E2E5;
-    border-radius: 20px;
-    background: #F5F8FA;
-    padding: 20px;
-    font-size: 16px;
+    display: none;
   }
 
   span {
