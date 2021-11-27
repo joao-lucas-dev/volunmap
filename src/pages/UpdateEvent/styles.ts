@@ -8,8 +8,8 @@ export const Container = styled.div`
 
 export const Area = styled.div`
   width: 100%;
-  display: flex;
   margin-top: 40px;
+  display: flex;
   justify-content: center;
   align-items: center;
 `;

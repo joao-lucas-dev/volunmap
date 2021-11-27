@@ -72,13 +72,16 @@ const Dashboard: React.FC = () => {
           Authorization: `Bearer ${JSON.parse(token || "")}`
         }
       });
+
       setCustomer(response.data.response);
 
-      const responseEvents = await api.get('');
-      const customerEvents = responseEvents.data.response
-        .filter((obj: any) => obj.user.email === response.data.response.email);
+      const responseEvents = await api.get('/events/myprofile', {
+        headers: {
+          Authorization: `Bearer ${JSON.parse(token || "")}`
+        }
+      });
 
-      setEvents(customerEvents);
+      setEvents(responseEvents.data.response);
     } catch (err) {
       console.log(err);
     }
@@ -131,9 +134,17 @@ const Dashboard: React.FC = () => {
                   return (
                     <tr key={event.event.id}>
                       <td>{event.event.event_name}</td>
-                      <td>{format(new Date(event.event.date_init_event), 'dd/MM/yyyy')}</td>
                       <td>
-                        <button>Editar</button>
+                        {format(new Date(event.event.date_init_event), 'dd/MM/yyyy')}
+                      </td>
+                      <td>
+                        <button 
+                          onClick={() => { 
+                            navigate(
+                              '/atualizar-evento', 
+                              { state: event.event.id }
+                            )
+                            }}>Editar</button>
                       </td>
                     </tr>
                   );
