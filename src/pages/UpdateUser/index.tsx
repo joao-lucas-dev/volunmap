@@ -1,4 +1,4 @@
-import React, { useCallback, useRef, useState } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { SideBar } from '../../components/SideBar';
 import { FormHandles } from '@unform/core';
 import { Form } from '@unform/web';
@@ -17,6 +17,13 @@ import {
 import getValidationErrors from '../../utils/getValidationsErros';
 import api from '../../services';
 
+interface ICustomer {
+  first_name: string;
+  last_name: string;
+  email: string;
+  password: string;
+}
+
 interface IData {
   firstName: string;
   lastName: string;
@@ -24,12 +31,28 @@ interface IData {
   password: string;
 }
 
-const CreateUser: React.FC = () => {
+const UpdateUser: React.FC = () => {
+  const [customer, setCustomer] = useState({} as ICustomer);
   const [loading, setLoading] = useState(false);
 
   const navigate = useNavigate();
 
   const formRef = useRef<FormHandles>(null);
+
+  const getCustomer = useCallback(async () => {
+    try {
+      const token = localStorage.getItem("volunMap-token");
+
+      const response = await api.get("users/myprofile", {
+        headers: {
+          Authorization: `Bearer ${JSON.parse(token || "")}`
+        }
+      });
+      setCustomer(response.data.response);
+    } catch (err) {
+      console.log(err);
+    }
+  }, []);
 
   const handleSubmit = useCallback(async (data: IData) => {
     try {
@@ -48,18 +71,24 @@ const CreateUser: React.FC = () => {
         abortEarly: false,
       });
 
-      await api.post('/users', {
+      const token = localStorage.getItem("volunMap-token");
+
+      await api.put('/users/myprofile', {
         first_name: data.firstName,
         last_name: data.lastName,
         email: data.email,
         password: data.password,
+      }, {
+        headers: {
+          Authorization: `Bearer ${JSON.parse(token || "")}`
+        }
       });
 
       setLoading(false);
 
-      toast.success('Cadastro realizado com sucesso!');
+      toast.success('Atualização realizada com sucesso!');
 
-      navigate('/login')
+      navigate('/dashboard');
     } catch (err) {
       setLoading(false);
 
@@ -73,21 +102,29 @@ const CreateUser: React.FC = () => {
     }
   }, [navigate]);
 
+  useEffect(() => {
+    getCustomer();
+  }, [getCustomer]);
+
+  if (!customer) {
+    return <></>;
+  }
+
   return (
     <Container>
-      <SideBar goTo="/"/>
+      <SideBar goTo="/dashboard"/>
 
       <Area>
         <Card>
-          <h1>Cadastrar</h1>
+          <h1>Atualizar</h1>
 
           <Form
             ref={formRef}
             onSubmit={handleSubmit}
             initialData={{
-              firstName: '',
-              lastName: '',
-              email: '',
+              firstName: customer.first_name,
+              lastName: customer.last_name,
+              email: customer.email,
               password: '',
             }}
             >
@@ -95,17 +132,12 @@ const CreateUser: React.FC = () => {
               <Input name="lastName" label="Sobrenome" />
               <Input name="email" label="E-mail" />
               <Input name="password" label="Senha" />
-              <Button loading={loading} type="submit">Cadastrar</Button>
+              <Button loading={loading} type="submit">Atualizar</Button>
             </Form>
-
-            <p>
-              Já tem conta? Entre uma clicando {' '}
-              <button onClick={() => navigate('/login')}>aqui!</button>
-            </p>
         </Card>
       </Area>
     </Container>
   );
 }
 
-export { CreateUser };
+export { UpdateUser };

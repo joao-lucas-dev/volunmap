@@ -113,7 +113,11 @@ const Dashboard: React.FC = () => {
                 <span><strong>E-mail:</strong> {customer.email}</span>
               </LeftSide>
               <RightSide>
-                <Button>Editar</Button>
+                <Button onClick={() => {
+                  navigate(
+                    '/atualizar-usuario',
+                  )
+                }}>Editar</Button>
               </RightSide>
             </Info>
 

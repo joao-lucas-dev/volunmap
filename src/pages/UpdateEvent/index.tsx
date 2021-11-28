@@ -292,9 +292,9 @@ const UpdateEvent: React.FC = () => {
             >
               <Input name="eventName" label="Nome do evento" />
               <Input styleOf="textArea" name="drescription" label="Sobre" />
-              <Input name="phone" label="Número do WhatsApp" />
+              <Input name="phone" label="Número do WhatsApp" type="number" />
               <InputFile  type="file" name="photo" label="Foto" onChange={handleOnChange} />
-              {photo.base64 && (
+              {photo?.base64 && (
                 <>
                   <h3>Preview</h3>
                   <img src={photo.base64} alt="Teste" />

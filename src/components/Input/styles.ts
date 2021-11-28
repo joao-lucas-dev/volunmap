@@ -19,6 +19,7 @@ export const Container = styled.div`
     background: #F5F8FA;
     padding: 20px;
     font-size: 16px;
+    font-family: Arial, Helvetica, sans-serif;
   }
 
   input {

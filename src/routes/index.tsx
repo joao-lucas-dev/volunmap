@@ -8,6 +8,7 @@ import { CreateUser } from '../pages/CreateUser';
 import { Dashboard } from '../pages/Dashboard';
 import { CreateEvent } from '../pages/CreateEvent';
 import { UpdateEvent } from '../pages/UpdateEvent';
+import { UpdateUser } from '../pages/UpdateUser';
 
 const RoutesApp: React.FC = () => (
   <Routes>
@@ -18,6 +19,7 @@ const RoutesApp: React.FC = () => (
     <Route path="/dashboard" element={<Dashboard />} />
     <Route path="/criar-evento" element={<CreateEvent />} />
     <Route path="/atualizar-evento" element={<UpdateEvent />} />
+    <Route path="/atualizar-usuario" element={<UpdateUser />} />
   </Routes>
 );
 

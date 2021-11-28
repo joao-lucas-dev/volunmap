@@ -88,8 +88,7 @@ const Home: React.FC = () => {
           <span>O seu apoio ajuda muitas famílias. Vem doar!</span>
         </SidebarMiddle>
         <SidebarBottom>
-          <strong>Jaboatão dos Guararapes</strong>
-          <span>Pernambuco</span>
+          <strong>Pernambuco</strong>
         </SidebarBottom>
       </Sidebar>
 

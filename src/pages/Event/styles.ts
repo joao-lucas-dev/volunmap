@@ -110,6 +110,7 @@ export const CardHour = styled.div`
 export const DescriptionDonations = styled.p`
   margin: 27px 0;
   line-height: 28px;
+  white-space: pre-line;
 `;
 
 export const WhatsAppButton = styled.a`
