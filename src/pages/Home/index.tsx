@@ -2,7 +2,8 @@ import React, { useCallback, useEffect, useState } from 'react';
 import { GoogleMap, useJsApiLoader, Marker } from '@react-google-maps/api';
 import { useNavigate } from 'react-router';
 
-import { isToday, isBefore } from '../../utils/dateFormat';
+import { isToday } from '../../utils/dateFormat';
+import { isBefore } from 'date-fns';
 
 import { useGeoLocation } from '../../hooks/useGeoLocation';
 
@@ -105,7 +106,7 @@ const Home: React.FC = () => {
         >
           {events.map(event => {
             const isTodayDate = isToday(event.event.date_init_event);
-            const isBeforeDate = isBefore(event.event.date_init_event);
+            const isBeforeDate = isBefore(new Date(event.event.date_init_event), new Date());
             return (
               <div key={event.event.id}>
                 {!isBeforeDate && (

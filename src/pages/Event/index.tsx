@@ -3,7 +3,7 @@ import React, { useCallback, useEffect, useState } from 'react';
 import { useLocation } from 'react-router-dom';
 import { FiClock } from 'react-icons/fi';
 import { FaWhatsapp } from 'react-icons/fa';
-import { format, getHours, getMinutes } from 'date-fns';
+import { format, getHours } from 'date-fns';
 import { isToday } from '../../utils/dateFormat';
 
 import { SideBar } from '../../components/SideBar';
@@ -138,7 +138,7 @@ const Event: React.FC = () => {
               ) : (
                 <span>Horário (Dia {event && format(new Date(event.event.date_init_event), 'dd/MM/yyyy')})</span>
               )}
-              <span>Das {event && getHours(new Date(event.event.date_init_event))}:{event && getMinutes(new Date(event.event.date_init_event))}h às {event && getHours(new Date(event.event.date_end_event))}:{event && getMinutes(new Date(event.event.date_init_event))}h</span>
+              <span>Das {event && getHours(new Date(event.event.date_init_event))}:{event && ('0'+new Date(event.event.date_init_event).getMinutes()).slice(-2)}h às {event && getHours(new Date(event.event.date_end_event))}:{event && ('0'+new Date(event.event.date_end_event).getMinutes()).slice(-2)}h</span>
             </CardHour>
 
             <DescriptionDonations>{event?.event.description_donations}</DescriptionDonations>

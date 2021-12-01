@@ -130,9 +130,6 @@ const CreateEvent: React.FC = () => {
         date_init_event: data.dateInitEvent,
         date_end_event: data.dateEndEvent,
         phone: Number(data.phone),
-        pictures: [
-          photo
-        ]
       }, {
         headers: {
           Authorization: `Bearer ${JSON.parse(token || "")}`
@@ -158,7 +155,7 @@ const CreateEvent: React.FC = () => {
         toast.error('Erro. Tente novamente mais tarde!');
       }
     }
-  }, [position.latitude, photo, position.longitude, navigate]);
+  }, [position.latitude, position.longitude, navigate]);
 
   useEffect(() => {
     setPositionArea({
