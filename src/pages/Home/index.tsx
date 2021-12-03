@@ -106,7 +106,7 @@ const Home: React.FC = () => {
         >
           {events.map(event => {
             const isTodayDate = isToday(event.event.date_init_event);
-            const isBeforeDate = isBefore(new Date(event.event.date_init_event), new Date());
+            const isBeforeDate = isBefore(new Date(event.event.date_end_event), new Date());
             return (
               <div key={event.event.id}>
                 {!isBeforeDate && (

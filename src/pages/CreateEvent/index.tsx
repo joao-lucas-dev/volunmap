@@ -43,7 +43,7 @@ interface IData {
 }
 
 interface IPhoto {
-  mimo: string,
+  file: File,
   base64: any;
 }
 
@@ -89,7 +89,7 @@ const CreateEvent: React.FC = () => {
     const imageBase64 = await toBase64(e.target.files[0]);
 
     setPhoto({
-      mimo: e.target.files[0].type,
+      file: e.target.files[0],
       base64: imageBase64,
     });
   }, []);
@@ -136,9 +136,20 @@ const CreateEvent: React.FC = () => {
         }
       });
 
+      const eventId = dataEvent.response;
+
+      const formData = new FormData();
+      formData.append("files", photo.file);
+
+      await api.post(`/events/${eventId}/upload`, formData, {
+        headers: {
+          Authorization: `Bearer ${JSON.parse(token || "")}`
+        }
+      });
+
       toast.success('Evento criado com sucesso!');
 
-      navigate('/evento', { state: dataEvent.response });
+      navigate('/evento', { state: eventId });
 
       setLoading(false);
     } catch (err) {
@@ -155,7 +166,7 @@ const CreateEvent: React.FC = () => {
         toast.error('Erro. Tente novamente mais tarde!');
       }
     }
-  }, [position.latitude, position.longitude, navigate]);
+  }, [position.latitude, position.longitude, navigate, photo]);
 
   useEffect(() => {
     setPositionArea({

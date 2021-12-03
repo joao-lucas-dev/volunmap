@@ -44,8 +44,10 @@ interface IData {
 }
 
 interface IPhoto {
-  mimo: string,
-  base64: any;
+  mime?: string,
+  base64?: any;
+  url?: string;
+  file: File;
 }
 
 interface IUser {
@@ -128,7 +130,7 @@ const UpdateEvent: React.FC = () => {
     const imageBase64 = await toBase64(e.target.files[0]);
 
     setPhoto({
-      mimo: e.target.files[0].type,
+      file: e.target.files[0],
       base64: imageBase64,
     });
   }, []);
@@ -159,8 +161,9 @@ const UpdateEvent: React.FC = () => {
       });
 
       const token = localStorage.getItem('volunMap-token');
+      const eventId = locationParams.state;
 
-      await api.put(`/events/${locationParams.state}`, {
+      await api.put(`/events/${eventId}`, {
         event_name: data.eventName,
         drescription: data.drescription,
         description_donations: data.descriptionDonations,
@@ -169,10 +172,17 @@ const UpdateEvent: React.FC = () => {
         date_init_event: data.dateInitEvent,
         date_end_event: data.dateEndEvent,
         phone: Number(data.phone),
-        pictures: [
-          photo
-        ]
       }, {
+        headers: {
+          Authorization: `Bearer ${JSON.parse(token || "")}`
+        }
+      });
+
+
+      const formData = new FormData();
+      formData.append("files", photo.file);
+
+      await api.post(`/events/${eventId}/upload`, formData, {
         headers: {
           Authorization: `Bearer ${JSON.parse(token || "")}`
         }
@@ -297,7 +307,14 @@ const UpdateEvent: React.FC = () => {
               {photo?.base64 && (
                 <>
                   <h3>Preview</h3>
-                  <img src={photo.base64} alt="Teste" />
+                  <img src={photo.base64} alt="Imagem" />
+                </>
+              )}
+
+              {photo?.url && (
+                <>
+                  <h3>Preview</h3>
+                  <img src={photo.url} alt="Imagem" />
                 </>
               )}
 

@@ -79,8 +79,8 @@ const Event: React.FC = () => {
         <h4>Evento de Doação</h4>
 
         <Card>
-          {event?.event?.pictures[0]?.base64 ? (
-            <img src={event?.event.pictures[0].base64} alt={event?.event.pictures[0].title} />
+          {event?.event?.pictures[0]?.url ? (
+            <img src={event?.event.pictures[0].url} alt="Imagem" />
           ) : (
             <img src="https://www.madeireiraestrela.com.br/images/joomlart/demo/default.jpg" alt="Sem Imagem" />
           )}
