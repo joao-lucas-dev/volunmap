@@ -190,7 +190,7 @@ const UpdateEvent: React.FC = () => {
 
       toast.success('Evento atualizado com sucesso!');
 
-      navigate('/dashboard');
+      navigate('/evento', { state: eventId });
 
       setLoading(false);
     } catch (err) {
